@@ -67,6 +67,7 @@ colnames(alabels)[1:2] <- c("activity_id","descriptive_activity_name")
 library(sqldf)
 ms_alab <- sqldf("select ms.*, alabels.descriptive_activity_name from ms, 
                  alabels where ms.activity = alabels.activity_id")
+ms_alab <- tbl_df(ms_alab)
 part3 <- ms_alab
 
 
