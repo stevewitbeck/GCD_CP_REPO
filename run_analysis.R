@@ -40,6 +40,7 @@ dp_test <- tbl_df(test)
 ##are merged together and the result is stored in the dplyr format
 dp_tt <- rbind(train,test)
 dp_tt <- tbl_df(dp_tt)
+part1 <- dp_tt
 
 ##load the names of the 561 columns
 feat <- read.table("features.txt")
@@ -55,6 +56,7 @@ ms_cols <- grep("mean|std",feat[,2]) +2
 ##I include the activity and subject at this point in order to identify the observations.
 
 ms <- dp_tt[,c(1:2,ms_cols)]
+part2 <- ms
 
 ##This reads the descriptive activity labels into the object 'alabels'
 alabels <- read.table("activity_labels.txt")
@@ -62,10 +64,10 @@ colnames(alabels)[1:2] <- c("activity_id","descriptive_activity_name")
 
 ##This accomplishes part 3 of the assignment by adding the descriptive activity labels to the data.  
 ##I used sqldf as I find it works better than merge and it doesnt reorder your columns or data
+library(sqldf)
 ms_alab <- sqldf("select ms.*, alabels.descriptive_activity_name from ms, 
                  alabels where ms.activity = alabels.activity_id")
-
-
+part3 <- ms_alab
 
 
 ##Column names are identified and assigned to object 'cnms'. Make.names is used to remove
@@ -77,6 +79,8 @@ cnms <- rbind(cnms,"descriptive_activity_label")
 ##Column names are applied to the object 'ms_alab'.  This accomplishes part 4 of the assignment
 ##by adding the descriptive variable names from the 'features.txt' file
 colnames(ms_alab) <- cnms
+part4 <- cnms
+
 ms_alab_col <- tbl_df(ms_alab)
 ##This rearranges the columns so the subject, activity_id and descriptive_activity_label are up front.
 ##I also remove the activity_id so I can group by and use the summarize_each() function later
@@ -92,3 +96,4 @@ ms_alab_col <- group_by(ms_alab_col, subject, descriptive_activity_label)
 means <- summarise_each(ms_alab_col, funs(mean))
 ##This renames the columns to show that the results contain values that consist of averages
 colnames(means)[3:81] <- paste("avg_", colnames(means)[3:81], sep="")
+part5 <- means
