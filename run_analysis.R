@@ -97,3 +97,4 @@ means <- summarise_each(ms_alab_col, funs(mean))
 ##This renames the columns to show that the results contain values that consist of averages
 colnames(means)[3:81] <- paste("avg_", colnames(means)[3:81], sep="")
 part5 <- means
+part5

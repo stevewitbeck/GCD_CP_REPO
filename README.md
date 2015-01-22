@@ -27,4 +27,5 @@ Download the dataset and unzip the contents to its own folder.  Change the worki
 of the script to this directory.
 
 Load the script into R studio and press run.  The results for each part of the assignment will be stored
-in objects 'Part1', 'Part2', etc.  To view the result print the object in the console.
+in objects 'Part1', 'Part2', etc.  To view the result print the object in the console.  By default, the result
+from part 5 is returned as this is one of the requirements listed in the evaluation of the assignment
