@@ -80,9 +80,8 @@ cnms <- rbind(cnms,"descriptive_activity_label")
 ##Column names are applied to the object 'ms_alab'.  This accomplishes part 4 of the assignment
 ##by adding the descriptive variable names from the 'features.txt' file
 colnames(ms_alab) <- cnms
-part4 <- cnms
-
 ms_alab_col <- tbl_df(ms_alab)
+part4 <- ms_alab_col
 ##This rearranges the columns so the subject, activity_id and descriptive_activity_label are up front.
 ##I also remove the activity_id so I can group by and use the summarize_each() function later
 ms_alab_col <- select(ms_alab_col, c(1,82,3:81))
