@@ -88,7 +88,7 @@ ms_alab_col <- group_by(ms_alab_col, subject, descriptive_activity_label)
 ##Here I use the summarise_each() function to compute the means of each variable by each activity and subject
 ##and assign it to object 'means'.
 ##This data is tidy because each variable resides in one column and each different observation of a particular
-##variable is in a different row.  This accomplishes part 5 of the assignment
+##variable is in a different row.  The data is in wide form.  This accomplishes part 5 of the assignment
 means <- summarise_each(ms_alab_col, funs(mean))
 ##This renames the columns to show that the results contain values that consist of averages
 colnames(means)[3:81] <- paste("avg_", colnames(means)[3:81], sep="")
