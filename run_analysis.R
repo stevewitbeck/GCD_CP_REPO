@@ -52,15 +52,19 @@ ms_cols <- grep("mean|std",feat[,2]) +2
 ##This accomplishes part 2 of the assignment.
 ##It returns only the columns for the measurements on the mean and stdev 
 ##and assigns it to object 'ms'.
+##I include the activity and subject at this point in order to identify the observations.
+
 ms <- dp_tt[,c(1:2,ms_cols)]
 
 ##This reads the descriptive activity labels into the object 'alabels'
 alabels <- read.table("activity_labels.txt")
 colnames(alabels)[1:2] <- c("activity_id","descriptive_activity_name")
 
-##This accomplishes part 3 of the assignment by adding the descriptive activity labels to the data
-##Sort is set to false in the merge so we can still apply the column names later
-ms_alab <- merge(ms,alabels,by.x = "activity", by.y = "activity_id", sort = FALSE)
+##This accomplishes part 3 of the assignment by adding the descriptive activity labels to the data.  
+##I used sqldf as I find it works better than merge and it doesnt reorder your columns or data
+ms_alab <- sqldf("select ms.*, alabels.descriptive_activity_name from ms, 
+                 alabels where ms.activity = alabels.activity_id")
+
 
 
 
@@ -74,5 +78,17 @@ cnms <- rbind(cnms,"descriptive_activity_label")
 ##by adding the descriptive variable names from the 'features.txt' file
 colnames(ms_alab) <- cnms
 ms_alab_col <- tbl_df(ms_alab)
+##This rearranges the columns so the subject, activity_id and descriptive_activity_label are up front.
+##I also remove the activity_id so I can group by and use the summarize_each() function later
+ms_alab_col <- select(ms_alab_col, c(1,82,3:81))
 
+##This establishes the groups for use in the summarise_each() function
+ms_alab_col <- group_by(ms_alab_col, subject, descriptive_activity_label)
 
+##Here I use the summarise_each() function to compute the means of each variable by each activity and subject
+##and assign it to object 'means'.
+##This data is tidy because each variable resides in one column and each different observation of a particular
+##variable is in a different row.  This accomplishes part 5 of the assignment
+means <- summarise_each(ms_alab_col, funs(mean))
+##This renames the columns to show that the results contain values that consist of averages
+colnames(means)[3:81] <- paste("avg_", colnames(means)[3:81], sep="")
